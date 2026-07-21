@@ -1,0 +1,11 @@
+{
+  "eth": [
+    "https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID",
+    "https://eth.llamarpc.com",
+    "https://cloudflare-eth.com/"
+  ],
+  "bnb": [
+    "https://bsc-dataseed.bnbchain.org",
+    "https://bsc-dataseed.nariox.org"
+  ]
+}

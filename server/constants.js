@@ -1,0 +1,5 @@
+module.exports = {
+  MNEMONICS_PER_FILE: 100,
+  WALLETS_PER_MNEMONIC: 11,
+  WALLETS_PER_FILE: 1100,
+};

@@ -1,0 +1,16 @@
+node_modules/
+.env
+
+rpc-config.json
+
+server/wallets_scan_eth/*.txt
+server/wallets_scan_bnb/*.txt
+server/wallets_failed_eth/*.txt
+server/wallets_failed_bnb/*.txt
+server/wallets_scanned/*.txt
+server/log/**/*.log
+server/log/findings.jsonl
+server/log/scan-progress.json
+server/log/rpc-status.json
+server/wallets_scan_eth/error.log
+server/wallets_scan_bnb/error.log

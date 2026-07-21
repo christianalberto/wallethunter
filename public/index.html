@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="modern">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WalletHunter — Dashboard</title>
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="stylesheet" href="/styles.css?v=13">
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="header-brand">
+        <img class="brand-logo" src="/assets/logo-header.png" alt="" width="40" height="40">
+        <div>
+          <h1>WalletHunter</h1>
+          <p class="subtitle">Hunt funded wallets · Ethereum &amp; BSC</p>
+        </div>
+      </div>
+      <div class="header-stats" id="stats-bar">
+        <div class="stat"><span class="stat-label">ETH queue</span><span class="stat-value" id="stat-eth">—</span></div>
+        <div class="stat"><span class="stat-label">BNB queue</span><span class="stat-value" id="stat-bnb">—</span></div>
+        <div class="stat"><span class="stat-label">Scanned</span><span class="stat-value" id="stat-scanned">—</span></div>
+        <div class="stat highlight"><span class="stat-label">Findings</span><span class="stat-value" id="stat-findings">—</span></div>
+      </div>
+      <div class="connection" id="ws-status">
+        <span class="conn-dot"></span>
+        <span>Connecting…</span>
+      </div>
+    </header>
+
+    <nav class="tabs" role="tablist">
+      <button class="tab active" data-tab="generate" role="tab" aria-selected="true">Generation</button>
+      <button class="tab" data-tab="scan-eth" role="tab" aria-selected="false">Scan ETH</button>
+      <button class="tab" data-tab="scan-bnb" role="tab" aria-selected="false">Scan BNB</button>
+      <button class="tab" data-tab="findings" role="tab" aria-selected="false">Findings</button>
+    </nav>
+
+    <main>
+      <section class="panel active" id="panel-generate" role="tabpanel">
+        <div class="panel-grid">
+          <div class="card">
+            <h2>Generate wallets</h2>
+            <div class="job-row">
+              <div class="job-info">
+                <span class="job-name">Ethereum (ETH)</span>
+                <span class="job-status" id="status-generate-eth">Stopped</span>
+              </div>
+              <div class="job-actions">
+                <button class="btn btn-start" data-start="generate-eth">Start</button>
+                <button class="btn btn-stop" data-stop="generate-eth" disabled>Stop</button>
+              </div>
+            </div>
+            <div class="job-row">
+              <div class="job-info">
+                <span class="job-name">Binance Smart Chain (BNB)</span>
+                <span class="job-status" id="status-generate-bnb">Stopped</span>
+              </div>
+              <div class="job-actions">
+                <button class="btn btn-start" data-start="generate-bnb">Start</button>
+                <button class="btn btn-stop" data-stop="generate-bnb" disabled>Stop</button>
+              </div>
+            </div>
+            <div class="gen-stats">
+              <h3 class="section-label">Wallets generated</h3>
+              <p class="gen-wallet-line" id="gen-stat-eth">ETH wallets 0 files (0 wallets)</p>
+              <p class="gen-wallet-line" id="gen-stat-bnb">BNB wallets 0 files (0 wallets)</p>
+            </div>
+          </div>
+          <div class="card console-card">
+            <div class="console-header">
+              <span>Console — Generation</span>
+              <button class="btn btn-ghost btn-sm" id="clear-generate">Clear</button>
+            </div>
+            <pre class="console" id="console-generate"></pre>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-scan-eth" role="tabpanel">
+        <div class="panel-grid">
+          <div class="card">
+            <h2>Scan Ethereum</h2>
+            <p class="card-desc">Check ETH balances in queued wallet batches.</p>
+
+            <div class="network-stat">
+              <span class="gen-stat-label">Queue</span>
+              <span class="gen-stat-value" id="scan-stat-eth-queue">0 files (0 wallets) waiting</span>
+            </div>
+
+            <div class="job-row">
+              <div class="job-info">
+                <span class="job-name">Scan ETH</span>
+                <span class="job-status" id="status-scan-eth">Stopped</span>
+              </div>
+              <div class="job-actions">
+                <button class="btn btn-start" data-start="scan-eth">Start</button>
+                <button class="btn btn-stop" data-stop="scan-eth" disabled>Stop</button>
+              </div>
+            </div>
+
+            <div class="scan-now-section">
+              <h3 class="section-label">File scanned now</h3>
+              <div class="scan-now-box" id="scan-stat-eth-active">
+                <span class="scan-now-idle">—</span>
+              </div>
+              <p class="scan-remaining" id="scan-stat-eth-remaining"></p>
+            </div>
+
+            <h3 class="section-label">Retry failed batches</h3>
+            <div class="failed-queue-stat" id="retry-box-eth">
+              <span class="gen-stat-label">Failed folder</span>
+              <span class="gen-stat-value" id="retry-failed-eth">0 files (0 wallets)</span>
+            </div>
+            <p class="retry-help">If scan fails, the batch moves to <code>wallets_failed_eth/</code>. Retry processes those files directly.</p>
+            <div class="job-row retry-row" id="retry-row-eth">
+              <div class="job-info">
+                <span class="job-name">Retry ETH</span>
+                <span class="job-status" id="status-retry-eth">Stopped</span>
+                <span class="job-meta" id="retry-stat-eth">Nothing to retry</span>
+              </div>
+              <div class="job-actions">
+                <button class="btn btn-start" data-start="retry-eth" disabled title="Re-scan failed ETH batches">Start</button>
+                <button class="btn btn-stop" data-stop="retry-eth" disabled title="Stop retry job">Stop</button>
+              </div>
+            </div>
+          </div>
+          <div class="card console-card">
+            <div class="console-rpc-bar" id="rpc-eth-card" data-state="idle">
+              <span class="console-rpc-label">RPC in use</span>
+              <span class="rpc-badge idle" id="rpc-eth-badge">Idle</span>
+              <span class="console-rpc-url" id="rpc-eth-url">—</span>
+              <span class="console-rpc-detail" id="rpc-eth-detail"></span>
+            </div>
+            <div class="console-header">
+              <span>Console — ETH</span>
+              <button class="btn btn-ghost btn-sm" id="clear-scan-eth">Clear</button>
+            </div>
+            <pre class="console" id="console-scan-eth"></pre>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-scan-bnb" role="tabpanel">
+        <div class="panel-grid">
+          <div class="card">
+            <h2>Scan BNB Smart Chain</h2>
+            <p class="card-desc">Check BNB balances in queued wallet batches.</p>
+
+            <div class="network-stat">
+              <span class="gen-stat-label">Queue</span>
+              <span class="gen-stat-value" id="scan-stat-bnb-queue">0 files (0 wallets) waiting</span>
+            </div>
+
+            <div class="job-row">
+              <div class="job-info">
+                <span class="job-name">Scan BNB</span>
+                <span class="job-status" id="status-scan-bnb">Stopped</span>
+              </div>
+              <div class="job-actions">
+                <button class="btn btn-start" data-start="scan-bnb">Start</button>
+                <button class="btn btn-stop" data-stop="scan-bnb" disabled>Stop</button>
+              </div>
+            </div>
+
+            <div class="scan-now-section">
+              <h3 class="section-label">File scanned now</h3>
+              <div class="scan-now-box" id="scan-stat-bnb-active">
+                <span class="scan-now-idle">—</span>
+              </div>
+              <p class="scan-remaining" id="scan-stat-bnb-remaining"></p>
+            </div>
+
+            <h3 class="section-label">Retry failed batches</h3>
+            <div class="failed-queue-stat" id="retry-box-bnb">
+              <span class="gen-stat-label">Failed folder</span>
+              <span class="gen-stat-value" id="retry-failed-bnb">0 files (0 wallets)</span>
+            </div>
+            <p class="retry-help">If scan fails, the batch moves to <code>wallets_failed_bnb/</code>. Retry processes those files directly.</p>
+            <div class="job-row retry-row" id="retry-row-bnb">
+              <div class="job-info">
+                <span class="job-name">Retry BNB</span>
+                <span class="job-status" id="status-retry-bnb">Stopped</span>
+                <span class="job-meta" id="retry-stat-bnb">Nothing to retry</span>
+              </div>
+              <div class="job-actions">
+                <button class="btn btn-start" data-start="retry-bnb" disabled title="Re-scan failed BNB batches">Start</button>
+                <button class="btn btn-stop" data-stop="retry-bnb" disabled title="Stop retry job">Stop</button>
+              </div>
+            </div>
+          </div>
+          <div class="card console-card">
+            <div class="console-rpc-bar" id="rpc-bnb-card" data-state="idle">
+              <span class="console-rpc-label">RPC in use</span>
+              <span class="rpc-badge idle" id="rpc-bnb-badge">Idle</span>
+              <span class="console-rpc-url" id="rpc-bnb-url">—</span>
+              <span class="console-rpc-detail" id="rpc-bnb-detail"></span>
+            </div>
+            <div class="console-header">
+              <span>Console — BNB</span>
+              <button class="btn btn-ghost btn-sm" id="clear-scan-bnb">Clear</button>
+            </div>
+            <pre class="console" id="console-scan-bnb"></pre>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-findings" role="tabpanel">
+        <div class="card findings-card">
+          <div class="findings-header">
+            <div>
+              <h2>Funded wallets</h2>
+              <p class="card-desc">Addresses with balance &gt; 0 detected during scanning.</p>
+            </div>
+            <button class="btn btn-ghost" id="refresh-findings">Refresh</button>
+          </div>
+          <div class="findings-table-wrap">
+            <table class="findings-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Network</th>
+                  <th>Address</th>
+                  <th>Balance</th>
+                  <th>File</th>
+                  <th>Private key</th>
+                </tr>
+              </thead>
+              <tbody id="findings-body">
+                <tr class="empty-row"><td colspan="6">Loading findings…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <div class="footer-controls">
+        <button type="button" class="footer-ctrl" id="open-config" aria-haspopup="dialog" aria-controls="config-modal">
+          <svg class="footer-ctrl-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="currentColor" d="M12 8a4 4 0 1 1 0 8 4 4 0 0 1 0-8Zm9.4 4a7.4 7.4 0 0 1-.1 1l2 1.6-2 3.4-2.3-.7a7.6 7.6 0 0 1-1.7 1l-.3 2.4H9l-.3-2.4a7.6 7.6 0 0 1-1.7-1l-2.3.7-2-3.4 2-1.6a7.4 7.4 0 0 1-.1-1 7.4 7.4 0 0 1 .1-1L.7 10.4l2-3.4 2.3.7a7.6 7.6 0 0 1 1.7-1l.3-2.4h4.8l.3 2.4a7.6 7.6 0 0 1 1.7 1l2.3-.7 2 3.4-2 1.6c.07.33.1.66.1 1Z"/>
+          </svg>
+          <span>Config</span>
+        </button>
+        <button type="button" class="footer-ctrl" id="open-guide" aria-haspopup="dialog" aria-controls="guide-modal">
+          <svg class="footer-ctrl-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2Zm1 17h-2v-2h2v2Zm2.07-7.75-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25Z"/>
+          </svg>
+          <span>Help</span>
+        </button>
+      </div>
+
+      <div class="footer-copy">
+        <p class="footer-tagline">Demonstrative tool · not financial advice</p>
+        <p class="footer-author">
+          Developed by
+          <a href="https://github.com/christianalberto" target="_blank" rel="noopener noreferrer">Christian Alberto</a>
+        </p>
+        <div class="footer-theme theme-segment" role="group" aria-label="Color theme">
+          <div class="theme-segment-track">
+            <button type="button" class="theme-segment-btn active" data-theme-value="modern" aria-pressed="true">Modern</button>
+            <button type="button" class="theme-segment-btn" data-theme-value="classic" aria-pressed="false">Classic</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-actions">
+        <a class="footer-link" href="https://github.com/christianalberto" target="_blank" rel="noopener noreferrer" title="GitHub profile">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2C6.48 2 2 6.58 2 12.24c0 4.52 2.87 8.35 6.84 9.7.5.1.68-.22.68-.48 0-.24-.01-.87-.01-1.7-2.78.62-3.37-1.36-3.37-1.36-.45-1.18-1.12-1.5-1.12-1.5-.92-.64.07-.63.07-.63 1.02.07 1.55 1.07 1.55 1.07.9 1.57 2.36 1.12 2.94.86.1-.67.35-1.12.64-1.38-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.7 0 0 .84-.27 2.75 1.05A9.2 9.2 0 0 1 12 6.84c.85 0 1.7.11 2.5.33 1.9-1.32 2.74-1.05 2.74-1.05.55 1.4.2 2.44.1 2.7.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.07.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.8 0 .27.18.59.69.49A10.03 10.03 0 0 0 22 12.24C22 6.58 17.52 2 12 2Z"/></svg>
+          GitHub
+        </a>
+        <a class="footer-link footer-link-accent" href="https://github.com/christianalberto/wallethunter" target="_blank" rel="noopener noreferrer" title="Star on GitHub">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="m12 17.3-5.2 3.2 1.4-5.9L3 9.7l6-.5L12 3.8l3 5.4 6 .5-5.2 4.9 1.4 5.9Z"/></svg>
+          Star repo
+        </a>
+        <a class="footer-link" href="https://github.com/sponsors/christianalberto" target="_blank" rel="noopener noreferrer" title="Support development">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 21s-7.5-4.7-7.5-10A4.5 4.5 0 0 1 12 6.5 4.5 4.5 0 0 1 19.5 11C19.5 16.3 12 21 12 21Z"/></svg>
+          Donate
+        </a>
+      </div>
+    </footer>
+  </div>
+
+  <div class="modal-backdrop" id="guide-modal" hidden>
+    <div class="modal-card modal-card--doc" role="dialog" aria-modal="true" aria-labelledby="guide-modal-title">
+      <div class="modal-header">
+        <h2 id="guide-modal-title">Help</h2>
+        <button type="button" class="btn btn-ghost btn-sm modal-close" id="close-guide" aria-label="Close">✕</button>
+      </div>
+
+      <div class="doc-nav">
+        <nav class="doc-tabs" role="tablist" aria-label="Help sections">
+        <button type="button" class="doc-tab active" data-doc-tab="overview" role="tab" aria-selected="true">Overview</button>
+        <button type="button" class="doc-tab" data-doc-tab="header" role="tab" aria-selected="false">Header</button>
+        <button type="button" class="doc-tab" data-doc-tab="generate" role="tab" aria-selected="false">Generation</button>
+        <button type="button" class="doc-tab" data-doc-tab="scan" role="tab" aria-selected="false">Scan</button>
+        <button type="button" class="doc-tab" data-doc-tab="findings" role="tab" aria-selected="false">Findings</button>
+        <button type="button" class="doc-tab" data-doc-tab="config" role="tab" aria-selected="false">Config</button>
+        </nav>
+      </div>
+
+      <div class="doc-panels">
+        <section class="doc-panel active" id="doc-panel-overview" role="tabpanel">
+          <div class="doc-section doc-section--intro">
+            <h3>What is this tool?</h3>
+            <p>WalletHunter is a <strong>demonstrative</strong> dashboard to generate random wallet batches and scan Ethereum and BNB Smart Chain for addresses with a balance. It is meant for learning and experimentation — not financial advice.</p>
+            <p class="doc-flow"><span>Generate</span> → <span>Scan</span> → <span>Findings</span></p>
+          </div>
+          <div class="doc-section doc-section--tip">
+            <h3>Quick start</h3>
+            <ol class="doc-steps">
+              <li>Open <strong>Config</strong> and add your email settings (optional).</li>
+              <li>In <strong>Generation</strong>, start ETH and/or BNB generation.</li>
+              <li>In <strong>Scan ETH</strong> or <strong>Scan BNB</strong>, start the scan when batches are queued.</li>
+              <li>Check <strong>Findings</strong> for any wallet with balance.</li>
+              <li>Use <strong>Retry</strong> if batches land in the failed folder.</li>
+            </ol>
+          </div>
+        </section>
+
+        <section class="doc-panel" id="doc-panel-header" role="tabpanel" hidden>
+          <div class="doc-section">
+            <h3>Header counters</h3>
+            <p class="doc-lead">Live stats shown at the top of the dashboard.</p>
+            <dl class="doc-list">
+              <div><dt>ETH queue</dt><dd>Batches waiting in the ETH scan queue (<code>wallets_scan_eth/</code>). Each file holds 1,100 wallets.</dd></div>
+              <div><dt>BNB queue</dt><dd>Same for BNB Smart Chain (<code>wallets_scan_bnb/</code>).</dd></div>
+              <div><dt>Scanned</dt><dd>Total batch files already processed and stored in <code>wallets_scanned/</code> (ETH + BNB combined).</dd></div>
+              <div><dt>Findings</dt><dd>Wallets with balance &gt; 0 found so far.</dd></div>
+              <div><dt>Style</dt><dd>Switch between Modern and Classic below the author name in the footer.</dd></div>
+              <div><dt>Connection</dt><dd>Live link to the server. Green = connected; logs and status update in real time.</dd></div>
+            </dl>
+          </div>
+        </section>
+
+        <section class="doc-panel" id="doc-panel-generate" role="tabpanel" hidden>
+          <div class="doc-section">
+            <h3>Generation tab</h3>
+            <p class="doc-lead">Creates random wallet batch files on disk, ready for scanning.</p>
+            <dl class="doc-list">
+              <div><dt>Start / Stop</dt><dd>Run or stop wallet generation for ETH or BNB independently.</dd></div>
+              <div><dt>Wallets generated</dt><dd>How many batch files exist per network (files × 1,100 = total wallets).</dd></div>
+              <div><dt>Console</dt><dd>Live output from the generator. Use <strong>Clear</strong> to empty the view.</dd></div>
+            </dl>
+          </div>
+        </section>
+
+        <section class="doc-panel" id="doc-panel-scan" role="tabpanel" hidden>
+          <div class="doc-section">
+            <h3>Scan ETH / Scan BNB tabs</h3>
+            <p class="doc-lead">Read queued batches and check on-chain balances via RPC.</p>
+            <dl class="doc-list">
+              <div><dt>Queue</dt><dd>Batches still waiting to be scanned on that network.</dd></div>
+              <div><dt>Start / Stop</dt><dd>Begin or stop the scan job for that chain.</dd></div>
+              <div><dt>File scanned now</dt><dd>Which batch file is being processed right now.</dd></div>
+              <div><dt>Files left to scan</dt><dd>How many batches remain after the current one.</dd></div>
+              <div><dt>Failed folder</dt><dd>If a scan fails, the batch moves to <code>wallets_failed_eth/</code> or <code>wallets_failed_bnb/</code>.</dd></div>
+              <div><dt>Retry</dt><dd>Re-process failed batches from that folder. On success they go to <code>wallets_scanned/</code>.</dd></div>
+              <div><dt>RPC in use</dt><dd>Which RPC endpoint is active while scanning (shown above the console).</dd></div>
+              <div><dt>Console</dt><dd>Live scan logs for that network.</dd></div>
+            </dl>
+          </div>
+        </section>
+
+        <section class="doc-panel" id="doc-panel-findings" role="tabpanel" hidden>
+          <div class="doc-section">
+            <h3>Findings tab</h3>
+            <p class="doc-lead">Table of funded wallets detected during scanning.</p>
+            <dl class="doc-list">
+              <div><dt>Date</dt><dd>When the wallet was found.</dd></div>
+              <div><dt>Network</dt><dd>ETH or BNB chain.</dd></div>
+              <div><dt>Address / Balance</dt><dd>Public address and detected balance.</dd></div>
+              <div><dt>File</dt><dd>Source batch file.</dd></div>
+              <div><dt>Private key</dt><dd>Click a cell to copy it to the clipboard.</dd></div>
+              <div><dt>Refresh</dt><dd>Reload the table from disk.</dd></div>
+            </dl>
+          </div>
+        </section>
+
+        <section class="doc-panel" id="doc-panel-config" role="tabpanel" hidden>
+          <div class="doc-section">
+            <h3>Config</h3>
+            <p class="doc-lead">Footer button with two tabs: Email and RPC.</p>
+            <dl class="doc-list">
+              <div><dt>Email</dt><dd>Sender email and recipient for balance alerts.</dd></div>
+              <div><dt>RPC</dt><dd>Custom Ethereum and BNB endpoint lists (one URL per line). Saved to <code>rpc-config.json</code>.</dd></div>
+              <div><dt>Defaults</dt><dd>Public RPC lists from the repo are used until you save your own.</dd></div>
+              <div><dt>GitHub / Star / Donate</dt><dd>Links in the footer.</dd></div>
+            </dl>
+          </div>
+        </section>
+      </div>
+
+      <div class="modal-actions modal-actions--doc">
+        <button type="button" class="btn btn-start" id="close-guide-bottom">Got it</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="config-modal" hidden>
+    <div class="modal-card modal-card--config" role="dialog" aria-modal="true" aria-labelledby="config-modal-title">
+      <div class="modal-header">
+        <h2 id="config-modal-title">Config</h2>
+        <button type="button" class="btn btn-ghost btn-sm modal-close" id="close-config" aria-label="Close">✕</button>
+      </div>
+
+      <nav class="config-tabs" role="tablist" aria-label="Config sections">
+        <button type="button" class="config-tab active" data-config-tab="email" role="tab" aria-selected="true">Email</button>
+        <button type="button" class="config-tab" data-config-tab="rpc" role="tab" aria-selected="false">RPC</button>
+      </nav>
+
+      <form id="config-form" class="config-form">
+        <section class="config-panel active" id="config-panel-email" role="tabpanel">
+          <p class="modal-desc">Set up your sender email and recipient address to receive an alert when a wallet with a balance is found.</p>
+          <label class="config-field">
+            <span>HOST_EMAIL</span>
+            <input type="text" name="HOST_EMAIL" id="cfg-HOST_EMAIL" autocomplete="off">
+          </label>
+          <label class="config-field">
+            <span>PASSWORD_EMAIL</span>
+            <input type="password" name="PASSWORD_EMAIL" id="cfg-PASSWORD_EMAIL" autocomplete="new-password" placeholder="Required">
+          </label>
+          <label class="config-field">
+            <span>USER_MAIL</span>
+            <input type="email" name="USER_MAIL" id="cfg-USER_MAIL" autocomplete="off">
+          </label>
+          <label class="config-field">
+            <span>USER_RECIPIENT</span>
+            <input type="email" name="USER_RECIPIENT" id="cfg-USER_RECIPIENT" autocomplete="off">
+          </label>
+        </section>
+
+        <section class="config-panel" id="config-panel-rpc" role="tabpanel" hidden>
+          <p class="modal-desc">One RPC URL per line. Saved to <code>rpc-config.json</code> on your machine (ignored by Git). Public users should add their own keys here — do not use someone else&apos;s private endpoints.</p>
+          <label class="config-field">
+            <span>Ethereum RPCs</span>
+            <textarea name="rpc-eth" id="cfg-rpc-eth" rows="7" spellcheck="false" placeholder="https://..."></textarea>
+          </label>
+          <label class="config-field">
+            <span>BNB Smart Chain RPCs</span>
+            <textarea name="rpc-bnb" id="cfg-rpc-bnb" rows="7" spellcheck="false" placeholder="https://..."></textarea>
+          </label>
+        </section>
+
+        <p class="config-status" id="config-status"></p>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-ghost" id="cancel-config">Cancel</button>
+          <button type="submit" class="btn btn-start">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/app.js?v=21"></script>
+</body>
+</html>
