@@ -7,6 +7,9 @@
   const consoleScanBnb = document.getElementById('console-scan-bnb');
   const findingsBody = document.getElementById('findings-body');
   const wsStatus = document.getElementById('ws-status');
+  const CELEBRATION_KEY = 'wallet-hunter-finding-celebrations';
+
+  let pendingCelebrationFindings = [];
 
   const MAX_CONSOLE_LINES = 800;
   let ws = null;
@@ -344,6 +347,21 @@
     }
   }
 
+  function formatBalanceDisplay(balanceFormatted) {
+    if (!balanceFormatted) return 'balance > 0';
+
+    const trimmed = String(balanceFormatted).trim();
+    const match = trimmed.match(/^([0-9.eE+-]+)\s+([A-Za-z]+)$/);
+    if (!match) return trimmed;
+
+    const num = Number(match[1]);
+    if (!Number.isFinite(num)) return trimmed;
+
+    const rounded = Math.round(num * 1e5) / 1e5;
+    const formatted = rounded.toFixed(5).replace(/\.?0+$/, '');
+    return `${formatted} ${match[2]}`;
+  }
+
   function networkBadge(network) {
     const n = (network || '').toLowerCase();
     const cls = n === 'bnb' ? 'badge-bnb' : 'badge-eth';
@@ -365,7 +383,7 @@
           <td>${formatDate(f.timestamp)}</td>
           <td>${networkBadge(f.network)}</td>
           <td class="addr-cell" title="${f.address}">${f.address}</td>
-          <td class="balance-cell">${f.balanceFormatted}</td>
+          <td class="balance-cell">${formatBalanceDisplay(f.balanceFormatted)}</td>
           <td>${f.file || '—'}</td>
           <td class="pk-cell" title="Click to copy">${f.privateKey}</td>
         </tr>`;
@@ -376,11 +394,125 @@
   async function loadFindings() {
     try {
       const data = await api('/api/findings');
-      renderFindings(data.findings || []);
+      const findings = data.findings || [];
+      renderFindings(findings);
+      return findings;
     } catch {
       findingsBody.innerHTML =
         '<tr class="empty-row"><td colspan="6">Failed to load findings.</td></tr>';
+      return [];
     }
+  }
+
+  function findingFingerprint(finding) {
+    return `${finding.timestamp}|${finding.address}|${finding.network || ''}`;
+  }
+
+  function getCelebratedSet() {
+    try {
+      return new Set(JSON.parse(localStorage.getItem(CELEBRATION_KEY) || '[]'));
+    } catch {
+      return new Set();
+    }
+  }
+
+  function markFindingsCelebrated(findings) {
+    const celebrated = getCelebratedSet();
+    findings.forEach((finding) => celebrated.add(findingFingerprint(finding)));
+    localStorage.setItem(CELEBRATION_KEY, JSON.stringify([...celebrated].slice(-200)));
+  }
+
+  function getUncelebratedFindings(findings) {
+    const celebrated = getCelebratedSet();
+    return findings.filter((finding) => !celebrated.has(findingFingerprint(finding)));
+  }
+
+  function isFindingsTabActive() {
+    return document.getElementById('panel-findings')?.classList.contains('active');
+  }
+
+  function restartCelebrationLogoAnimation() {
+    const coin = document.querySelector('.finding-coin');
+    if (!coin) return;
+    coin.classList.remove('is-flipping');
+    void coin.offsetWidth;
+    coin.classList.add('is-flipping');
+  }
+
+  function showFindingCelebration(findings) {
+    const modal = document.getElementById('finding-celebration-modal');
+    const textEl = document.getElementById('finding-celebration-text');
+    const metaEl = document.getElementById('finding-celebration-meta');
+    if (!modal || !findings.length) return;
+
+    pendingCelebrationFindings = findings.slice();
+    const latest = findings[0];
+    const count = findings.length;
+
+    if (textEl) {
+      textEl.textContent =
+        count === 1
+          ? 'A funded wallet was detected during scanning.'
+          : `${count} funded wallets were detected during scanning.`;
+    }
+
+    if (metaEl && latest) {
+      const network = (latest.network || 'eth').toUpperCase();
+      metaEl.textContent =
+        count === 1
+          ? `${network} · ${formatBalanceDisplay(latest.balanceFormatted)}`
+          : `Latest: ${network} · ${formatBalanceDisplay(latest.balanceFormatted)}`;
+    }
+
+    const startFlip = () => restartCelebrationLogoAnimation();
+    const logoImg = document.querySelector('.finding-celebration-logo');
+
+    modal.hidden = false;
+    document.body.style.overflow = 'hidden';
+
+    if (logoImg && !logoImg.complete) {
+      logoImg.addEventListener('load', startFlip, { once: true });
+      logoImg.addEventListener('error', startFlip, { once: true });
+    } else {
+      startFlip();
+    }
+  }
+
+  function maybeShowFindingCelebration(findings) {
+    const uncelebrated = getUncelebratedFindings(findings);
+    if (uncelebrated.length) {
+      showFindingCelebration(uncelebrated);
+    }
+  }
+
+  function closeFindingCelebration() {
+    const modal = document.getElementById('finding-celebration-modal');
+    if (!modal || modal.hidden) return;
+
+    if (pendingCelebrationFindings.length) {
+      markFindingsCelebrated(pendingCelebrationFindings);
+      pendingCelebrationFindings = [];
+    }
+
+    modal.hidden = true;
+    document.body.style.overflow = '';
+    document.querySelector('.finding-coin')?.classList.remove('is-flipping');
+  }
+
+  function initFindingCelebrationModal() {
+    const modal = document.getElementById('finding-celebration-modal');
+    const closeBtn = document.getElementById('close-finding-celebration');
+    if (!modal) return;
+
+    closeBtn?.addEventListener('click', closeFindingCelebration);
+
+    modal.addEventListener('click', (event) => {
+      if (event.target === modal) closeFindingCelebration();
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !modal.hidden) closeFindingCelebration();
+    });
   }
 
   function connectWebSocket() {
@@ -444,16 +576,20 @@
       <td>${formatDate(finding.timestamp)}</td>
       <td>${networkBadge(finding.network)}</td>
       <td class="addr-cell" title="${finding.address}">${finding.address}</td>
-      <td class="balance-cell">${finding.balanceFormatted}</td>
+      <td class="balance-cell">${formatBalanceDisplay(finding.balanceFormatted)}</td>
       <td>${finding.file || '—'}</td>
       <td class="pk-cell" title="Click to copy">${finding.privateKey}</td>
     `;
     findingsBody.prepend(tr);
+
+    if (isFindingsTabActive()) {
+      maybeShowFindingCelebration([finding]);
+    }
   }
 
   // Tabs
   document.querySelectorAll('.tab').forEach((tab) => {
-    tab.addEventListener('click', () => {
+    tab.addEventListener('click', async () => {
       document.querySelectorAll('.tab').forEach((t) => {
         t.classList.remove('active');
         t.setAttribute('aria-selected', 'false');
@@ -463,6 +599,11 @@
       tab.classList.add('active');
       tab.setAttribute('aria-selected', 'true');
       document.getElementById(`panel-${tab.dataset.tab}`).classList.add('active');
+
+      if (tab.dataset.tab === 'findings') {
+        const findings = await loadFindings();
+        maybeShowFindingCelebration(findings);
+      }
     });
   });
 
@@ -835,6 +976,7 @@
     initTheme();
     initGuideModal();
     initConfigModal();
+    initFindingCelebrationModal();
     connectWebSocket();
     await refreshStatus();
     await refreshStats();

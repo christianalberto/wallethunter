@@ -23,6 +23,7 @@ const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
 
 const PUBLIC_DIR = path.join(__dirname, '..', 'public');
+const REPO_ASSETS_DIR = path.join(__dirname, '..', 'assets');
 const PORT = Number(process.env.PORT) || 3000;
 
 function getPidOnPort(port) {
@@ -107,6 +108,19 @@ server.on('error', handleListenErrorOnce);
 wss.on('error', handleListenErrorOnce);
 
 app.use(express.json());
+
+app.get('/assets/logo-banner.png', (req, res, next) => {
+  const file = path.join(REPO_ASSETS_DIR, 'logo-banner.png');
+  if (!fs.existsSync(file)) return next();
+  return res.sendFile(file);
+});
+
+app.get('/assets/logo-transparent.png', (req, res, next) => {
+  const file = path.join(REPO_ASSETS_DIR, 'logo-transparent.png');
+  if (!fs.existsSync(file)) return next();
+  return res.sendFile(file);
+});
+
 app.use(express.static(PUBLIC_DIR));
 
 function countTxtFiles(dirPath) {

@@ -7,6 +7,7 @@ const nodemailer = require('nodemailer');
 const { paths, ensureDir } = require('../paths');
 const { updateProgress, clearProgress } = require('./scan-progress');
 const { recordFinding } = require('./findings');
+const { formatBalanceAmount } = require('./balance-format');
 const { getRotator } = require('./rpc');
 const {
   getRetryStatsForNetwork,
@@ -149,7 +150,10 @@ function createScanner(network) {
 
       for (const walletBalance of result) {
         if (walletBalance.balance > 0) {
-          const balanceFormatted = `${web3.utils.fromWei(walletBalance.balance, 'ether')} ${config.currency}`;
+          const balanceFormatted = formatBalanceAmount(
+            web3.utils.fromWei(walletBalance.balance, 'ether'),
+            config.currency
+          );
           recordFinding({
             network,
             address: walletBalance.wallet,
