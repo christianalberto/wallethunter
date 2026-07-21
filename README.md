@@ -4,15 +4,13 @@
 
 <p align="center">
   <pre style="display:inline-block;text-align:left;font-family:monospace;font-size:11px;line-height:1.15;margin:0;">
- __      __    _ _   _       _   _            _   _
- \ \    / /   | | | | |     | | | |          | | | |
-  \ \/\/ / ___| | | |_| __ _| |_| |__   ___  | |_| |__   ___
-   \    / / _ \ | | __|/ _` | __| '_ \ / _ \ | __| '_ \ / _ \
-    \/\/  \___/_|_|\__|\__,_|\__|_| |_|\___/ |_| |_.__/ \___/
+__        __    _ _      _   _   _             _
+\ \      / /_ _| | | ___| |_| | | |_   _ _ __ | |_ ___ _ __
+ \ \ /\ / / _` | | |/ _ \ __| |_| | | | | '_ \| __/ _ \ '__|
+  \ V  V / (_| | | |  __/ |_|  _  | |_| | | | | ||  __/ |
+   \_/\_/ \__,_|_|_|\___|\__|_| |_|\__,_|_| |_|\__\___|_|
   </pre>
 </p>
-
-<h1 align="center">WalletHunter</h1>
 
 <p align="center"><em>Hunt funded wallets · Ethereum &amp; BSC</em></p>
 
@@ -384,6 +382,48 @@ wallet-hunter/
 - Configure **your own** RPC URLs with **your own** API keys.
 - If this repo was ever pushed with private RPC keys in source history, rotate those keys.
 - Verify on-chain contract addresses before use.
+
+---
+
+## Screens
+
+Dashboard previews from the web UI (`npm run dashboard`).
+
+### Generation
+
+<p align="center">
+  <img src="assets/screens/imagen1.png" alt="Generation tab — Classic theme" width="720">
+</p>
+
+<p align="center"><em>Classic theme — wallet generation with live console output.</em></p>
+
+<p align="center">
+  <img src="assets/screens/imagen5.png" alt="Generation tab — Modern theme" width="720">
+</p>
+
+<p align="center"><em>Modern theme — generation controls, stats, and footer links.</em></p>
+
+### Scan ETH
+
+<p align="center">
+  <img src="assets/screens/imagen2.png" alt="Scan ETH tab" width="720">
+</p>
+
+<p align="center"><em>Scan ETH — active RPC endpoint, current batch, and scan console.</em></p>
+
+### Config &amp; Help
+
+<p align="center">
+  <img src="assets/screens/imagen3.png" alt="Config modal — Email" width="640">
+</p>
+
+<p align="center"><em>Config modal — email alerts (SMTP sender and recipient).</em></p>
+
+<p align="center">
+  <img src="assets/screens/imagen4.png" alt="Help modal — Overview" width="640">
+</p>
+
+<p align="center"><em>Help modal — overview and quick start guide.</em></p>
 
 ---
 
