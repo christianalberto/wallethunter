@@ -1,0 +1,16 @@
+{
+  "eth": [
+    "https://eth.llamarpc.com",
+    "https://cloudflare-eth.com/",
+    "https://ethereum.publicnode.com",
+    "https://eth-mainnet.public.blastapi.io",
+    "https://rpc.ankr.com/eth"
+  ],
+  "bnb": [
+    "https://bsc-dataseed.bnbchain.org",
+    "https://bsc-dataseed.nariox.org",
+    "https://bsc-dataseed.defibit.io",
+    "https://bsc-dataseed.ninicoin.io",
+    "https://bsc-dataseed-public.bnbchain.org"
+  ]
+}
