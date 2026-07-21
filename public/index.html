@@ -8,7 +8,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  <link rel="stylesheet" href="/styles.css?v=14">
+  <link rel="stylesheet" href="/styles.css?v=19">
 </head>
 <body>
   <div class="app">
@@ -455,6 +455,34 @@
     </div>
   </div>
 
-  <script src="/app.js?v=21"></script>
+  <div class="modal-backdrop modal-backdrop--celebration" id="finding-celebration-modal" hidden>
+    <div class="modal-card modal-card--celebration" role="dialog" aria-modal="true" aria-labelledby="finding-celebration-title">
+      <div class="finding-celebration-body">
+        <div class="finding-coin-scene" aria-hidden="true">
+          <div class="finding-coin">
+            <div class="finding-coin-face finding-coin-face--gold">
+              <div class="finding-coin-shine"></div>
+              <svg class="finding-coin-emblem" viewBox="0 0 64 64" role="presentation">
+                <circle cx="32" cy="32" r="28" fill="none" stroke="rgba(120,80,10,0.35)" stroke-width="2"/>
+                <path d="M32 14 L44 22 V42 L32 50 L20 42 V22 Z" fill="rgba(120,80,10,0.2)" stroke="rgba(90,60,8,0.45)" stroke-width="1.5"/>
+                <text x="32" y="38" text-anchor="middle" font-size="18" font-weight="700" fill="#7a5510" font-family="Segoe UI, sans-serif">Ξ</text>
+              </svg>
+            </div>
+            <div class="finding-coin-face finding-coin-face--badge">
+              <img class="finding-celebration-logo" src="/assets/logo-banner.png" alt="" width="128" height="128" loading="eager" decoding="async">
+            </div>
+          </div>
+        </div>
+        <h2 id="finding-celebration-title">Something happened!</h2>
+        <p class="finding-celebration-text" id="finding-celebration-text">
+          A funded wallet was detected during scanning.
+        </p>
+        <p class="finding-celebration-meta" id="finding-celebration-meta"></p>
+        <button type="button" class="btn btn-start" id="close-finding-celebration">View findings</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/app.js?v=25"></script>
 </body>
 </html>
