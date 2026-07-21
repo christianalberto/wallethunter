@@ -11,6 +11,7 @@
   --bg: #0a0c10;
   --bg-elevated: #111418;
   --bg-card: #0d1117;
+  --surface: #151b24;
   --border: #1a2530;
   --border-light: #243040;
   --text: #c8d4dc;
@@ -37,6 +38,7 @@
   --bg: #0a0e0a;
   --bg-elevated: #111611;
   --bg-card: #0f140f;
+  --surface: #141a14;
   --border: #1e2e1e;
   --border-light: #2a3d2a;
   --text: #c8d6c8;
@@ -1078,8 +1080,8 @@ body {
   align-items: center;
   justify-content: center;
   padding: 1.25rem;
-  background: rgba(0, 0, 0, 0.55);
-  backdrop-filter: blur(4px);
+  background: rgba(4, 6, 10, 0.78);
+  backdrop-filter: blur(8px);
 }
 
 .modal-backdrop[hidden] {
@@ -1090,10 +1092,12 @@ body {
   width: min(100%, 28rem);
   max-height: calc(100vh - 2.5rem);
   overflow: auto;
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-light);
   border-radius: calc(var(--radius) + 2px);
-  background: var(--surface);
-  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.35);
+  background: linear-gradient(180deg, var(--surface) 0%, var(--bg-elevated) 100%);
+  box-shadow:
+    0 24px 48px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .modal-header {
@@ -1103,6 +1107,7 @@ body {
   gap: 1rem;
   padding: 1rem 1.25rem;
   border-bottom: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.18);
   flex-shrink: 0;
 }
 
@@ -1131,6 +1136,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
+  background: var(--bg-card);
 }
 
 .modal-card--config {
@@ -1147,6 +1153,7 @@ body {
   gap: 0.3rem;
   padding: 0 1.25rem 0.85rem;
   flex-shrink: 0;
+  background: rgba(0, 0, 0, 0.12);
 }
 
 .config-tab {
@@ -1325,7 +1332,7 @@ body {
   max-height: min(52vh, 28rem);
   overflow: hidden;
   border-top: 1px solid var(--border);
-  background: rgba(0, 0, 0, 0.08);
+  background: var(--bg-card);
 }
 
 .doc-panel {
@@ -1445,7 +1452,7 @@ body {
   padding: 0.85rem 1.35rem 1.25rem;
   border-top: 1px solid var(--border);
   flex-shrink: 0;
-  background: var(--surface);
+  background: rgba(0, 0, 0, 0.16);
 }
 
 @media (max-width: 768px) {
