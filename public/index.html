@@ -299,6 +299,7 @@
         <button type="button" class="doc-tab" data-doc-tab="generate" role="tab" aria-selected="false">Generation</button>
         <button type="button" class="doc-tab" data-doc-tab="scan" role="tab" aria-selected="false">Scan</button>
         <button type="button" class="doc-tab" data-doc-tab="findings" role="tab" aria-selected="false">Findings</button>
+        <button type="button" class="doc-tab" data-doc-tab="footer" role="tab" aria-selected="false">Footer</button>
         <button type="button" class="doc-tab" data-doc-tab="config" role="tab" aria-selected="false">Config</button>
         </nav>
       </div>
@@ -331,7 +332,6 @@
               <div><dt>BNB queue</dt><dd>Same for BNB Smart Chain (<code>wallets_scan_bnb/</code>).</dd></div>
               <div><dt>Scanned</dt><dd>Total batch files already processed and stored in <code>wallets_scanned/</code> (ETH + BNB combined).</dd></div>
               <div><dt>Findings</dt><dd>Wallets with balance &gt; 0 found so far.</dd></div>
-              <div><dt>Style</dt><dd>Switch between Modern and Classic below the author name in the footer.</dd></div>
               <div><dt>Connection</dt><dd>Live link to the server. Green = connected; logs and status update in real time.</dd></div>
             </dl>
           </div>
@@ -381,15 +381,27 @@
           </div>
         </section>
 
+        <section class="doc-panel" id="doc-panel-footer" role="tabpanel" hidden>
+          <div class="doc-section">
+            <h3>Footer</h3>
+            <p class="doc-lead">Controls and links at the bottom of the dashboard.</p>
+            <dl class="doc-list">
+              <div><dt>Config</dt><dd>Opens the settings modal (Email and RPC tabs).</dd></div>
+              <div><dt>Help</dt><dd>Opens this documentation.</dd></div>
+              <div><dt>Style</dt><dd>Switch between Modern and Classic below the author name.</dd></div>
+              <div><dt>GitHub / Star / Donate</dt><dd>Links to the author profile, repository, and sponsorship page.</dd></div>
+            </dl>
+          </div>
+        </section>
+
         <section class="doc-panel" id="doc-panel-config" role="tabpanel" hidden>
           <div class="doc-section">
             <h3>Config</h3>
-            <p class="doc-lead">Footer button with two tabs: Email and RPC.</p>
+            <p class="doc-lead">Settings modal opened from the footer. Two tabs: Email and RPC.</p>
             <dl class="doc-list">
               <div><dt>Email</dt><dd>Sender email and recipient for balance alerts.</dd></div>
               <div><dt>RPC</dt><dd>Custom Ethereum and BNB endpoint lists (one URL per line). Saved to <code>rpc-config.json</code>.</dd></div>
               <div><dt>Defaults</dt><dd>Public RPC lists from the repo are used until you save your own.</dd></div>
-              <div><dt>GitHub / Star / Donate</dt><dd>Links in the footer.</dd></div>
             </dl>
           </div>
         </section>
