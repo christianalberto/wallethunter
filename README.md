@@ -60,17 +60,24 @@ ETH and BNB run **in parallel** as separate queues and scripts. Scanned batches 
 
 ---
 
-## Concepts
+## Folders & logs
 
-| Term | Meaning |
-|------|---------|
-| **Batch / file** | One `.txt` file with 1,100 wallets (`100` mnemonics × `11` derived addresses). |
-| **Scan queue** | `wallets_scan_eth/` or `wallets_scan_bnb/` — batches waiting to be scanned. |
-| **Failed folder** | `wallets_failed_eth/` or `wallets_failed_bnb/` — batch moved here when a scan errors (RPC, contract, I/O, etc.). |
-| **Scanned archive** | `wallets_scanned/` — batches that finished scanning successfully (ETH + BNB). |
-| **Finding** | A wallet with balance > 0, stored in `server/log/findings.jsonl`. |
+| Term / path | Purpose |
+|-------------|---------|
+| **Batch / file** | One `.txt` with 1,100 wallets (`100` mnemonics × `11` derived addresses). |
+| `server/wallets_scan_eth/` · `server/wallets_scan_bnb/` | Scan queues — batches waiting to be scanned. |
+| `server/wallets_failed_eth/` · `server/wallets_failed_bnb/` | Batches that failed during scan (RPC, contract, I/O, etc.). |
+| `server/wallets_scanned/` | Successfully processed batches (ETH + BNB share this folder). |
+| `server/log/findings.jsonl` | Funded wallets (balance > 0). |
+| `server/log/scan-progress.json` | Current file being scanned (dashboard + API). |
+| `server/log/rpc-status.json` | Active RPC endpoint per network. |
+| `server/log/error/` | Detailed error logs. |
 | **RPC rotation** | On RPC failure, the scan engine tries the next URL in your list automatically. |
-| **Job** | A running instance of a script (generate, scan, or retry). The dashboard spawns them as child processes; CLI runs them directly in your terminal. |
+| **Job** | A running script instance. The dashboard spawns child processes; CLI runs directly in your terminal. |
+
+**CLI monitoring:** count files in the scan queues, read the log files above, or watch stdout in each terminal.
+
+All wallet `.txt` files and logs are **gitignored** — never commit them.
 
 ---
 
@@ -157,14 +164,12 @@ If `rpc-config.json` is missing, the app falls back to `rpc-defaults.json` (publ
 
 ---
 
-## Manual usage (CLI) — core workflow
+## Quick start (CLI)
 
-This is the primary way to run WalletHunter. Each command maps to a Node script under `server/`.
-
-### npm scripts
+Primary way to run WalletHunter. Each `npm run` maps to a script under `server/` — direct equivalent: `node server/<script>.js`.
 
 ```bash
-# Generation (runs until Ctrl+C)
+# Generation — runs until Ctrl+C
 npm run generate:eth
 npm run generate:bnb
 
@@ -172,68 +177,31 @@ npm run generate:bnb
 npm run scan:eth
 npm run scan:bnb
 
-# Retry failed batches
+# Retry failed batches (when files land in wallets_failed_*)
 npm run retry:eth
 npm run retry:bnb
 ```
 
-### Direct node commands
+**Typical flow** (use separate terminals, or run steps sequentially):
 
-```bash
-node server/generate-wallets.js eth
-node server/generate-wallets.js bnb
-node server/scan-eth.js
-node server/scan-bnb.js
-node server/retry-eth.js
-node server/retry-bnb.js
-```
+- **Terminal 1** — `npm run generate:eth` fills `wallets_scan_eth/`.
+- **Terminal 2** — `npm run scan:eth` once batches exist.
+- **Optional** — same pattern for BNB (`generate:bnb` + `scan:bnb`).
+- **On scan errors** — `npm run retry:eth` / `retry:bnb` re-processes `wallets_failed_*`.
 
-### Typical manual session
-
-Open **separate terminals** (or run steps sequentially):
-
-```bash
-# Terminal 1 — generate ETH batches into the queue
-npm run generate:eth
-
-# Terminal 2 — scan the ETH queue when files exist
-npm run scan:eth
-
-# Terminal 3 (optional) — same for BNB
-npm run generate:bnb
-npm run scan:bnb
-
-# If scan errors moved files to wallets_failed_*:
-npm run retry:eth
-npm run retry:bnb
-```
-
-**Monitor progress without the dashboard:**
-
-- Watch queue sizes: count files in `server/wallets_scan_eth/` and `server/wallets_scan_bnb/`
-- Read findings: `server/log/findings.jsonl`
-- Read scan progress: `server/log/scan-progress.json`
-- Read RPC status: `server/log/rpc-status.json`
-- Console output goes to stdout in each terminal
+Scan and retry share the same engine (`server/lib/scan-runner.js`); retry reads from the failed folder instead of the queue.
 
 ---
 
 ## Web dashboard — optional UI
 
-The dashboard **does not replace** the scripts. It **spawns and monitors** them via `server/lib/process-manager.js` and streams stdout over WebSocket.
+The dashboard **does not replace** the scripts. It **spawns and monitors** the same CLI jobs via `server/lib/process-manager.js` and streams stdout over WebSocket.
 
 ```bash
 npm run dashboard
 ```
 
-Open [http://localhost:3001](http://localhost:3001) (or your `PORT`).
-
-| Tab | Under the hood |
-|-----|----------------|
-| **Generation** | `generate-wallets.js eth` / `bnb` |
-| **Scan ETH** | `scan-eth.js` + `retry-eth.js` |
-| **Scan BNB** | `scan-bnb.js` + `retry-bnb.js` |
-| **Findings** | Reads `server/log/findings.jsonl` |
+Open [http://localhost:3001](http://localhost:3001) (or your `PORT`). Tabs mirror the CLI workflow: generation, scan (ETH/BNB), and findings.
 
 **Footer controls:**
 
@@ -272,52 +240,6 @@ Scan scripts call a deployed **`WalletBalanceChecker`** contract that reads nati
 Source: `smart_contract/WalletBalanceChecker.sol`
 
 When `balance > 0`, the script records the finding and sends email (if SMTP is configured).
-
----
-
-## Folder reference
-
-| Folder / file | Purpose |
-|---------------|---------|
-| `server/wallets_scan_eth/` | ETH batches waiting to scan |
-| `server/wallets_scan_bnb/` | BNB batches waiting to scan |
-| `server/wallets_failed_eth/` | ETH batches that failed during scan |
-| `server/wallets_failed_bnb/` | BNB batches that failed during scan |
-| `server/wallets_scanned/` | Successfully processed batches (both networks) |
-| `server/log/findings.jsonl` | JSON-lines registry of funded wallets |
-| `server/log/scan-progress.json` | Current file being scanned (dashboard + API) |
-| `server/log/rpc-status.json` | Active RPC endpoint per network |
-| `server/log/error/` | Detailed error logs |
-
-All wallet `.txt` files and logs are **gitignored** — never commit them.
-
----
-
-## Scripts reference
-
-### `generate-wallets.js`
-
-```bash
-node server/generate-wallets.js eth   # → wallets_scan_eth/
-node server/generate-wallets.js bnb   # → wallets_scan_bnb/
-```
-
-Infinite loop until `Ctrl+C`. Writes one batch file per iteration.
-
-### `scan-eth.js` / `scan-bnb.js`
-
-Thin wrappers around `server/lib/scan-runner.js`:
-
-- Read all `.txt` files from the network queue
-- Batch-call the balance checker contract via Web3
-- Rotate through RPC URLs on failure
-- On success → move file to `wallets_scanned/`
-- On failure → move file to `wallets_failed_*/`
-- On funded wallet → append to `findings.jsonl` + email
-
-### `retry-eth.js` / `retry-bnb.js`
-
-Same scan engine, but input folder is `wallets_failed_*` instead of the scan queue. Successful retries archive to `wallets_scanned/`.
 
 ---
 
