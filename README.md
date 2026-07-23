@@ -18,6 +18,41 @@ __        __    _ _      _   _   _             _
 
 > **Important:** This project is for learning and experimentation — not financial advice. The probability of finding a funded random wallet is negligible.
 
+<p align="center">
+
+[![License](https://img.shields.io/github/license/christianalberto/wallethunter?style=for-the-badge&color=0891b2&label=License)](LICENSE)
+
+</p>
+
+<p align="center">
+
+[![Node.js](https://img.shields.io/badge/Node.js-18+-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![JavaScript](https://img.shields.io/badge/JavaScript-ES2022-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+[![Solidity](https://img.shields.io/badge/Solidity-0.8-363636?style=for-the-badge&logo=solidity&logoColor=white)](smart_contract/WalletBalanceChecker.sol)
+[![Web3.js](https://img.shields.io/badge/Web3.js-3.x-F16822?style=for-the-badge&logo=web3.js&logoColor=white)](https://web3js.org/)
+[![Express](https://img.shields.io/badge/Express-5-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)
+[![Ethereum](https://img.shields.io/badge/Ethereum-Mainnet-3C3C3D?style=for-the-badge&logo=ethereum&logoColor=white)](https://ethereum.org/)
+[![BNB Chain](https://img.shields.io/badge/BNB-Smart%20Chain-F0B90B?style=for-the-badge&logo=binance&logoColor=black)](https://www.bnbchain.org/)
+
+</p>
+
+<p align="center">
+
+[![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen?style=flat-square)](https://github.com/christianalberto/wallethunter/issues)
+[![PRs welcome](https://img.shields.io/badge/PRs-welcome-9cf?style=flat-square)](https://github.com/christianalberto/wallethunter/pulls)
+
+</p>
+
+<p align="center">
+  <em>Open-source &amp; free to use. If WalletHunter helped you learn, a star or sponsor keeps the project going ❤️</em>
+</p>
+
+<p align="center">
+  <a href="https://github.com/sponsors/christianalberto">
+    <img src="https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=ff69b4" alt="Sponsor on GitHub"/>
+  </a>
+</p>
+
 ---
 
 ## What this project really is
