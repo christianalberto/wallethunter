@@ -356,7 +356,7 @@ Dashboard previews from the web UI (`npm run dashboard`).
 - Repository: [github.com/christianalberto/wallethunter](https://github.com/christianalberto/wallethunter)
 - Sponsors: [github.com/sponsors/christianalberto](https://github.com/sponsors/christianalberto)
 
-If this project helped you, a star on GitHub is appreciated.
+If this project helped you, a star on GitHub repo is appreciated.
 
 ---
 
