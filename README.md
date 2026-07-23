@@ -19,14 +19,14 @@ __        __    _ _      _   _   _             _
 > **Important:** This project is for learning and experimentation — not financial advice. The probability of finding a funded random wallet is negligible.
 
 <p align="center">
-  <a href="LICENSE"><img src="https://img.shields.io/static/v1?label=License&message=MIT&logo=opensourceinitiative&logoColor=white&color=6366f1" alt="License MIT"/></a>
-  <a href="https://nodejs.org/"><img src="https://img.shields.io/static/v1?label=%E2%80%8B&message=Node.js&logo=node.js&logoColor=339933&color=6366f1" alt="Node.js"/></a>
-  <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript"><img src="https://img.shields.io/static/v1?label=%E2%80%8B&message=JavaScript&logo=javascript&logoColor=F7DF1E&color=6366f1" alt="JavaScript"/></a>
-  <a href="smart_contract/WalletBalanceChecker.sol"><img src="https://img.shields.io/static/v1?label=%E2%80%8B&message=Solidity&logo=solidity&logoColor=white&color=6366f1" alt="Solidity"/></a>
-  <a href="https://web3js.org/"><img src="https://img.shields.io/static/v1?label=%E2%80%8B&message=Web3.js&logo=web3.js&logoColor=F16822&color=6366f1" alt="Web3.js"/></a>
-  <a href="https://expressjs.com/"><img src="https://img.shields.io/static/v1?label=%E2%80%8B&message=Express&logo=express&logoColor=white&color=6366f1" alt="Express"/></a>
-  <a href="https://ethereum.org/"><img src="https://img.shields.io/static/v1?label=%E2%80%8B&message=Ethereum&logo=ethereum&logoColor=white&color=6366f1" alt="Ethereum"/></a>
-  <a href="https://www.bnbchain.org/"><img src="https://img.shields.io/static/v1?label=%E2%80%8B&message=BNB%20Chain&logo=binance&logoColor=F0B90B&color=6366f1" alt="BNB Chain"/></a>
+  <a href="LICENSE"><img src="https://img.shields.io/static/v1?label=License&message=MIT&logo=opensourceinitiative&logoColor=white&labelColor=6366f1&color=555555" alt="License MIT"/></a>
+  <a href="https://nodejs.org/"><img src="https://img.shields.io/static/v1?label=%E2%80%8B&message=Node.js&logo=node.js&logoColor=339933&labelColor=6366f1&color=555555" alt="Node.js"/></a>
+  <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript"><img src="https://img.shields.io/static/v1?label=%E2%80%8B&message=JavaScript&logo=javascript&logoColor=F7DF1E&labelColor=6366f1&color=555555" alt="JavaScript"/></a>
+  <a href="smart_contract/WalletBalanceChecker.sol"><img src="https://img.shields.io/static/v1?label=%E2%80%8B&message=Solidity&logo=solidity&logoColor=white&labelColor=6366f1&color=555555" alt="Solidity"/></a>
+  <a href="https://web3js.org/"><img src="https://img.shields.io/static/v1?label=%E2%80%8B&message=Web3.js&logo=web3.js&logoColor=F16822&labelColor=6366f1&color=555555" alt="Web3.js"/></a>
+  <a href="https://expressjs.com/"><img src="https://img.shields.io/static/v1?label=%E2%80%8B&message=Express&logo=express&logoColor=white&labelColor=6366f1&color=555555" alt="Express"/></a>
+  <a href="https://ethereum.org/"><img src="https://img.shields.io/static/v1?label=%E2%80%8B&message=Ethereum&logo=ethereum&logoColor=white&labelColor=6366f1&color=555555" alt="Ethereum"/></a>
+  <a href="https://www.bnbchain.org/"><img src="https://img.shields.io/static/v1?label=%E2%80%8B&message=BNB%20Chain&logo=binance&logoColor=F0B90B&labelColor=6366f1&color=555555" alt="BNB Chain"/></a>
 </p>
 
 ---
