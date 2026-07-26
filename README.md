@@ -16,9 +16,10 @@ __        __    _ _      _   _   _             _
 
 **Demonstrative** Node.js tool to generate random Ethereum/BSC wallet batches, scan on-chain balances in bulk via a smart contract, and alert by email when a funded address is found.
 
-> **Important:** This project is for learning and experimentation — not financial advice. The probability of finding a funded random wallet is negligible.
+> **Important:** This project is for learning and experimentation — not financial advice. The probability of finding a funded random wallet is negligible. Full legal text: [DISCLAIMER.md](DISCLAIMER.md).
 
 <p align="center">
+  <a href="DISCLAIMER.md"><img src="https://img.shields.io/static/v1?label=Disclaimer&message=Read%20before%20use&labelColor=555555&color=dc2626" alt="Disclaimer"/></a>
   <a href="LICENSE"><img src="https://img.shields.io/static/v1?label=License&message=MIT&logo=opensourceinitiative&logoColor=white&labelColor=555555&color=6366f1" alt="License MIT"/></a>
   <a href="https://nodejs.org/"><img src="https://img.shields.io/static/v1?label=%E2%80%8B&message=Node.js&logo=node.js&logoColor=white&labelColor=555555&color=6366f1" alt="Node.js"/></a>
   <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript"><img src="https://img.shields.io/static/v1?label=%E2%80%8B&message=JavaScript&logo=javascript&logoColor=white&labelColor=555555&color=6366f1" alt="JavaScript"/></a>
@@ -380,6 +381,12 @@ If this project helped you, a star on GitHub repo is appreciated.
     <img src="https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=ff69b4" alt="Sponsor on GitHub"/>
   </a>
 </p>
+
+---
+
+## Disclaimer
+
+Educational / research use only. No warranties. You assume all risk. See [DISCLAIMER.md](DISCLAIMER.md).
 
 ---
 
